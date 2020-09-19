@@ -67,7 +67,7 @@ if __name__ == '__main__':
     charnet = CharNet()
     charnet.load_state_dict(torch.load(cfg.WEIGHT))
     charnet.eval()
-    # charnet.cuda()
+    charnet.cuda()
     # charnet.device("cpu")
 
     for im_name in sorted(os.listdir(args.image_dir)):
