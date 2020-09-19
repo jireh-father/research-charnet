@@ -56,7 +56,7 @@ if __name__ == '__main__':
     parser.add_argument("config_file", help="path to config file", type=str)
     parser.add_argument("image_dir", type=str)
     parser.add_argument("results_dir", type=str)
-    parser.add_argument("use_cuda", default=False, action='store_true')
+    parser.add_argument("--use_cuda", default=False, action='store_true')
 
     args = parser.parse_args()
     os.makedirs(args.results_dir, exist_ok=True)
