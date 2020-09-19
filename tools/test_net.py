@@ -12,6 +12,7 @@ import numpy as np
 import argparse
 from charnet.config import cfg
 import matplotlib.pyplot as plt
+import time
 
 
 def save_word_recognition(word_instances, image_id, save_root, separator=chr(31)):
@@ -74,7 +75,9 @@ if __name__ == '__main__':
         im_original = cv2.imread(im_file)
         im, scale_w, scale_h, original_w, original_h = resize(im_original, size=cfg.INPUT_SIZE)
         with torch.no_grad():
+            start = time.time()
             char_bboxes, char_scores, word_instances = charnet(im, scale_w, scale_h, original_w, original_h)
+            print(time.time() - start)
             save_word_recognition(
                 word_instances, os.path.splitext(im_name)[0],
                 args.results_dir, cfg.RESULTS_SEPARATOR
