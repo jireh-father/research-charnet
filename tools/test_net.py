@@ -58,7 +58,7 @@ if __name__ == '__main__':
     parser.add_argument("results_dir", type=str)
 
     args = parser.parse_args()
-
+    os.makedirs(args.results_dir, exist_ok=True)
     cfg.merge_from_file(args.config_file)
     cfg.freeze()
 
