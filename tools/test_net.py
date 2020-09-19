@@ -67,19 +67,22 @@ if __name__ == '__main__':
     charnet = CharNet()
     charnet.load_state_dict(torch.load(cfg.WEIGHT))
     charnet.eval()
-    charnet.cuda()
-    # charnet.device("cpu")
+    # charnet.cuda()
+    charnet.device("cpu")
 
     for im_name in sorted(os.listdir(args.image_dir)):
         print("Processing {}...".format(im_name))
         im_file = os.path.join(args.image_dir, im_name)
+        total_start = time.time()
         im_original = cv2.imread(im_file)
         im, scale_w, scale_h, original_w, original_h = resize(im_original, size=cfg.INPUT_SIZE)
         with torch.no_grad():
             start = time.time()
             char_bboxes, char_scores, word_instances = charnet(im, scale_w, scale_h, original_w, original_h)
-            print(time.time() - start)
+            print('infer', time.time() - start)
+            print('total', time.time()- total_start)
             save_word_recognition(
                 word_instances, os.path.splitext(im_name)[0],
                 args.results_dir, cfg.RESULTS_SEPARATOR
             )
+
