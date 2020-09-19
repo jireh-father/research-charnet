@@ -56,6 +56,7 @@ if __name__ == '__main__':
     parser.add_argument("config_file", help="path to config file", type=str)
     parser.add_argument("image_dir", type=str)
     parser.add_argument("results_dir", type=str)
+    parser.add_argument("use_cuda", default=False, action='store_true')
 
     args = parser.parse_args()
     os.makedirs(args.results_dir, exist_ok=True)
@@ -67,7 +68,8 @@ if __name__ == '__main__':
     charnet = CharNet()
     charnet.load_state_dict(torch.load(cfg.WEIGHT))
     charnet.eval()
-    charnet.cuda()
+    if args.use_cuda:
+        charnet.cuda()
     # charnet.device("cpu")
 
     for im_name in sorted(os.listdir(args.image_dir)):
@@ -78,7 +80,7 @@ if __name__ == '__main__':
         im, scale_w, scale_h, original_w, original_h = resize(im_original, size=cfg.INPUT_SIZE)
         with torch.no_grad():
             start = time.time()
-            char_bboxes, char_scores, word_instances = charnet(im, scale_w, scale_h, original_w, original_h)
+            char_bboxes, char_scores, word_instances = charnet(args.use_cuda, im, scale_w, scale_h, original_w, original_h)
             print('infer', time.time() - start)
             print('total', time.time()- total_start)
             save_word_recognition(
